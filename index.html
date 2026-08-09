@@ -7,8 +7,9 @@
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     
-    <!-- HLS.js CDN -->
-    <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+    <!-- Video.js CSS & JS CDN -->
+    <link href="https://vjs.zencdn.net/8.10.0/video-js.css" rel="stylesheet" />
+    <script src="https://vjs.zencdn.net/8.10.0/video.min.js"></script>
     
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -45,6 +46,26 @@
         /* Protection style for dark CBS logo */
         .cbs-logo-protect {
             filter: brightness(0) invert(1) drop-shadow(0px 0px 4px rgba(255, 255, 255, 0.3));
+        }
+
+        /* Video.js Customization */
+        .video-js {
+            width: 100%;
+            height: 100%;
+            font-family: 'Inter', sans-serif;
+        }
+        .vjs-matrix.video-js {
+            color: #3b82f6;
+        }
+        .vjs-matrix .vjs-big-play-button {
+            background-color: rgba(59, 130, 246, 0.8);
+            border-color: #3b82f6;
+            border-radius: 50%;
+            width: 2em;
+            height: 2em;
+            line-height: 2em;
+            margin-top: -1em;
+            margin-left: -1em;
         }
     </style>
 </head>
@@ -128,15 +149,21 @@
                     </div>
                 </div>
 
-                <!-- HTML5 Video Container -->
+                <!-- Video.js Container -->
                 <div class="relative aspect-video bg-black flex items-center justify-center overflow-hidden">
                     <video 
-                        id="video" 
-                        class="w-full h-full object-contain" 
+                        id="my-video" 
+                        class="video-js vjs-matrix vjs-big-play-centered" 
                         controls 
+                        preload="auto" 
                         autoplay 
                         muted 
-                        playsinline>
+                        playsinline
+                    >
+                        <source src="https://bold-sky-a86c.yusoff-rohaidee.workers.dev/?url=https://admin2.paradilux.store/golazo.m3u8" type="application/x-mpegURL" />
+                        <p class="vjs-no-js">
+                            To view this video please enable JavaScript, and consider upgrading to a web browser that supports HTML5 video.
+                        </p>
                     </video>
                 </div>
             </div>
@@ -150,32 +177,15 @@
         <p class="mt-1">Broadcasted via CBS Sports Golazo Network.</p>
     </footer>
 
-    <!-- HLS.js Script -->
+    <!-- Video.js Script -->
     <script>
         document.addEventListener("DOMContentLoaded", function () {
-            var video = document.getElementById('video');
-            var videoSrc = 'https://bold-sky-a86c.yusoff-rohaidee.workers.dev/?url=https://admin2.paradilux.store/golazo.m3u8';
-
-            if (Hls.isSupported()) {
-                var hls = new Hls({
-                    debug: false,
-                    enableWorker: true
-                });
-                hls.loadSource(videoSrc);
-                hls.attachMedia(video);
-                hls.on(Hls.Events.MANIFEST_PARSED, function () {
-                    video.play().catch(function(error) {
-                        console.log("Autoplay failed due to user interaction policy:", error);
-                    });
-                });
-            }
-            // Sokongan Safari / iOS Native HLS
-            else if (video.canPlayType('application/vnd.apple.mpegurl')) {
-                video.src = videoSrc;
-                video.addEventListener('loadedmetadata', function () {
-                    video.play();
-                });
-            }
+            var player = videojs('my-video', {
+                fluid: true,
+                autoplay: 'any',
+                controls: true,
+                responsive: true
+            });
         });
     </script>
 </body>
