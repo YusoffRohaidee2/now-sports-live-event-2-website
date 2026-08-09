@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Now Sports Live Event 2 | Sports Hub Official</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- HLS.js CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Teko:wght@500;700&family=Inter:wght@400;600;800&display=swap');
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #0b0f19;
+            color: #ffffff;
+        }
+        .font-sports {
+            font-family: 'Teko', sans-serif;
+            text-transform: uppercase;
+        }
+        .glass-panel {
+            background: rgba(18, 24, 38, 0.85);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        .glow-effect {
+            box-shadow: 0 0 25px rgba(59, 130, 246, 0.25);
+        }
+        .live-badge {
+            animation: pulse 1.5s infinite;
+        }
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.4; }
+            100% { opacity: 1; }
+        }
+
+        /* Protection style for dark CBS logo */
+        .cbs-logo-protect {
+            filter: brightness(0) invert(1) drop-shadow(0px 0px 4px rgba(255, 255, 255, 0.3));
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col justify-between">
+
+    <!-- Header Navigation -->
+    <header class="glass-panel sticky top-0 z-50 px-6 py-4 border-b border-gray-800">
+        <div class="max-w-7xl mx-auto flex items-center justify-between">
+            <div class="flex items-center space-x-4">
+                <img src="https://i.ibb.co/CKstTbC0/download-2.png" alt="Now Sports Logo" class="h-10 object-contain">
+                <div class="hidden sm:block border-l border-gray-700 pl-4">
+                    <span class="text-xs text-blue-400 font-bold tracking-widest block uppercase">Now Sports Live Event 2</span>
+                    <span class="text-xs text-gray-400">by Sports Hub Official</span>
+                </div>
+            </div>
+            
+            <div class="flex items-center">
+                <span class="bg-red-600 text-white text-xs font-bold px-3 py-1 rounded-full flex items-center gap-2 live-badge">
+                    <span class="w-2 h-2 bg-white rounded-full"></span> LIVE BROADCAST
+                </span>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content Container -->
+    <main class="max-w-7xl mx-auto px-4 py-8 w-full flex-grow">
+        
+        <!-- Match Tagline Banner -->
+        <div class="text-center mb-8">
+            <span class="bg-gradient-to-r from-blue-600 to-indigo-600 text-white text-xs font-black tracking-widest px-4 py-1.5 rounded-full uppercase">
+                International Club Friendly Match
+            </span>
+            <h1 class="text-2xl md:text-4xl font-black mt-3 text-transparent bg-clip-text bg-gradient-to-r from-white via-gray-200 to-gray-400">
+                Clash of the Giants: The Blues vs Southern Tigers
+            </h1>
+        </div>
+
+        <!-- Scoreboard / Match Banner -->
+        <div class="glass-panel rounded-2xl p-6 md:p-8 mb-8 glow-effect">
+            <div class="grid grid-cols-3 items-center text-center">
+                
+                <!-- Team 1: Chelsea FC -->
+                <div class="flex flex-col items-center">
+                    <div class="w-20 h-20 md:w-32 md:h-32 flex items-center justify-center p-2 bg-white/5 rounded-full mb-3 border border-white/10">
+                        <img src="https://assets.stickpng.com/images/580b57fcd9996e24bc43c4e1.png" alt="Chelsea FC" class="max-h-full max-w-full object-contain">
+                    </div>
+                    <h2 class="font-sports text-xl md:text-3xl font-bold tracking-wide">Chelsea FC</h2>
+                    <span class="text-xs text-gray-400">Premier League</span>
+                </div>
+
+                <!-- Match Info / VS -->
+                <div class="flex flex-col items-center">
+                    <span class="font-sports text-3xl md:text-6xl font-bold text-blue-500 italic">VS</span>
+                    <div class="mt-2 bg-gray-800/80 px-4 py-2 rounded-lg border border-gray-700">
+                        <p class="text-xs text-gray-300 font-semibold"><i class="fas fa-futbol text-blue-400 mr-1"></i> Kick-off</p>
+                        <p class="text-sm md:text-base font-bold text-white">8:00 PM (GMT+8)</p>
+                    </div>
+                </div>
+
+                <!-- Team 2: JDT FC -->
+                <div class="flex flex-col items-center">
+                    <div class="w-20 h-20 md:w-32 md:h-32 flex items-center justify-center p-2 bg-white/5 rounded-full mb-3 border border-white/10">
+                        <img src="https://upload.wikimedia.org/wikipedia/en/c/c0/Johor_Darul_Ta%27zim_F.C..svg?utm_source=en.wikipedia.org&utm_campaign=index&utm_content=original" alt="JDT FC" class="max-h-full max-w-full object-contain">
+                    </div>
+                    <h2 class="font-sports text-xl md:text-3xl font-bold tracking-wide">Johor Darul Ta'zim</h2>
+                    <span class="text-xs text-gray-400">Malaysia Super League</span>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- Video Player Section Container -->
+        <div class="max-w-4xl mx-auto">
+            <div class="glass-panel rounded-2xl overflow-hidden shadow-2xl border border-gray-800">
+                <div class="bg-gray-900/90 px-4 py-3 border-b border-gray-800 flex items-center justify-between">
+                    <div class="flex items-center space-x-2">
+                        <img src="https://sports.cbsimg.net/fly/images/footer-logos/logo-cbs-sports-golazo-network-blue.svg" alt="CBS Sports Golazo Network" class="h-5 cbs-logo-protect">
+                    </div>
+                    <div class="text-xs text-gray-400 flex items-center gap-1">
+                        <i class="fas fa-signal text-green-500"></i> HD Quality
+                    </div>
+                </div>
+
+                <!-- HTML5 Video Container -->
+                <div class="relative aspect-video bg-black flex items-center justify-center overflow-hidden">
+                    <video 
+                        id="video" 
+                        class="w-full h-full object-contain" 
+                        controls 
+                        autoplay 
+                        muted 
+                        playsinline>
+                    </video>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="glass-panel border-t border-gray-800 mt-12 py-6 text-center text-xs text-gray-500">
+        <p>&copy; 2026 Now Sports Live Event 2 | Sports Hub Official. All Rights Reserved.</p>
+        <p class="mt-1">Broadcasted via CBS Sports Golazo Network.</p>
+    </footer>
+
+    <!-- HLS.js Script -->
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            var video = document.getElementById('video');
+            var videoSrc = 'https://bold-sky-a86c.yusoff-rohaidee.workers.dev/?url=https://admin2.paradilux.store/golazo.m3u8';
+
+            if (Hls.isSupported()) {
+                var hls = new Hls({
+                    debug: false,
+                    enableWorker: true
+                });
+                hls.loadSource(videoSrc);
+                hls.attachMedia(video);
+                hls.on(Hls.Events.MANIFEST_PARSED, function () {
+                    video.play().catch(function(error) {
+                        console.log("Autoplay failed due to user interaction policy:", error);
+                    });
+                });
+            }
+            // Sokongan Safari / iOS Native HLS
+            else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+                video.src = videoSrc;
+                video.addEventListener('loadedmetadata', function () {
+                    video.play();
+                });
+            }
+        });
+    </script>
+</body>
+</html>
