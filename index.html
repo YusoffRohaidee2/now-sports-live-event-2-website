@@ -169,7 +169,7 @@
 
             <!-- Video Player Section -->
             <div class="glass-panel rounded-2xl p-3 md:p-4 border border-gray-800 mb-6">
-                <div class="aspect-video w-full rounded-xl overflow-hidden bg-black relative">
+                <div id="player-container" class="aspect-video w-full rounded-xl overflow-hidden bg-black relative">
                     <video
                         id="live-video-player"
                         class="video-js vjs-default-skin vjs-big-play-centered"
@@ -188,14 +188,19 @@
                 <!-- Channel Selector Buttons -->
                 <div class="flex flex-wrap items-center justify-center gap-2.5 mt-4">
                     <button 
-                        onclick="switchChannel('https://bold-sky-a86c.yusoff-rohaidee.workers.dev/?url=https://1nyaler.streamhostingcdn.top/stream/15/index.m3u8', 'application/x-mpegURL', this)"
+                        onclick="switchStream('m3u8', 'https://bold-sky-a86c.yusoff-rohaidee.workers.dev/?url=https://1nyaler.streamhostingcdn.top/stream/15/index.m3u8', this)"
                         class="channel-btn bg-red-600 hover:bg-red-700 text-white font-semibold text-xs md:text-sm px-3.5 py-2 rounded-lg flex items-center gap-2 transition duration-200">
                         <i class="fas fa-tv"></i> Sportdigital FUSSBALL
                     </button>
                     <button 
-                        onclick="switchChannel('https://bold-sky-a86c.yusoff-rohaidee.workers.dev/?url=https://1nyaler.streamhostingcdn.top/stream/21/index.m3u8', 'application/x-mpegURL', this)"
+                        onclick="switchStream('m3u8', 'https://bold-sky-a86c.yusoff-rohaidee.workers.dev/?url=https://1nyaler.streamhostingcdn.top/stream/21/index.m3u8', this)"
                         class="channel-btn bg-gray-800 hover:bg-gray-700 text-gray-300 font-semibold text-xs md:text-sm px-3.5 py-2 rounded-lg flex items-center gap-2 transition duration-200 border border-gray-700">
                         <i class="fas fa-tv"></i> Sky Sport Calcio
+                    </button>
+                    <button 
+                        onclick="switchStream('iframe', 'https://cdx-08192.website/embed/beinsports-usa', this)"
+                        class="channel-btn bg-gray-800 hover:bg-gray-700 text-gray-300 font-semibold text-xs md:text-sm px-3.5 py-2 rounded-lg flex items-center gap-2 transition duration-200 border border-gray-700">
+                        <i class="fas fa-tv"></i> beIN Sports USA
                     </button>
                 </div>
             </div>
@@ -214,15 +219,50 @@
     <script>
         var player = videojs('live-video-player');
 
-        function switchChannel(streamUrl, streamType, btnElement) {
-            // Switch video source
-            player.src({
-                src: streamUrl,
-                type: streamType || 'application/x-mpegURL'
-            });
-            player.play();
+        function switchStream(type, srcUrl, btnElement) {
+            const container = document.getElementById('player-container');
 
-            // Update active button state
+            if (type === 'iframe') {
+                // Pause and cleanup video.js player if active
+                if (player) {
+                    player.pause();
+                }
+                // Insert iframe into player container
+                container.innerHTML = `
+                    <iframe 
+                        src="${srcUrl}" 
+                        width="100%" 
+                        height="100%" 
+                        frameborder="0" 
+                        scrolling="no" 
+                        allow="autoplay; encrypted-media; picture-in-picture; fullscreen" 
+                        allowfullscreen
+                        sandbox="allow-scripts allow-same-origin allow-presentation allow-forms">
+                    </iframe>
+                `;
+            } else if (type === 'm3u8') {
+                // Re-initialize video element if iframe was showing
+                if (!document.getElementById('live-video-player')) {
+                    container.innerHTML = `
+                        <video
+                            id="live-video-player"
+                            class="video-js vjs-default-skin vjs-big-play-centered"
+                            controls
+                            preload="auto"
+                            poster="https://i.ibb.co/VWKgt4Qn/Control-V-3.png">
+                        </video>
+                    `;
+                    player = videojs('live-video-player');
+                }
+                
+                player.src({
+                    src: srcUrl,
+                    type: 'application/x-mpegURL'
+                });
+                player.play();
+            }
+
+            // Update active button UI
             const buttons = document.querySelectorAll('.channel-btn');
             buttons.forEach(btn => {
                 btn.classList.remove('bg-red-600', 'text-white');
