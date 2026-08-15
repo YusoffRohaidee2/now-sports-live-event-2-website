@@ -56,7 +56,14 @@
             height: 100%;
             border-radius: 0.75rem;
             overflow: hidden;
+            background-color: black; /* Ensure black bg when no video */
         }
+        /* Standard poster background removed */
+        .vjs-poster {
+            background-size: cover;
+            background-color: black !important; /* Forces black bg */
+        }
+
         .vjs-big-play-button {
             background-color: rgba(239, 68, 68, 0.8) !important;
             border: none !important;
@@ -170,14 +177,13 @@
             <!-- Video Player Section -->
             <div class="glass-panel rounded-2xl p-3 md:p-4 border border-gray-800 mb-6">
                 <div id="player-container" class="aspect-video w-full rounded-xl overflow-hidden bg-black relative">
+                    <!-- Updated video setup, no initial source to prevent potential collision on first load -->
                     <video
                         id="live-video-player"
                         class="video-js vjs-default-skin vjs-big-play-centered"
                         controls
-                        preload="auto"
-                        poster="https://i.ibb.co/VWKgt4Qn/Control-V-3.png"
-                        data-setup='{}'>
-                        <source src="https://bold-sky-a86c.yusoff-rohaidee.workers.dev/?url=https://1nyaler.streamhostingcdn.top/stream/15/index.m3u8" type="application/x-mpegURL">
+                        preload="auto">
+                        <!-- Poster removed to have black background -->
                         <p class="vjs-no-js">
                             To view this video please enable JavaScript, and consider upgrading to a web browser that
                             <a href="https://videojs.com/html5-video-support/" target="_blank">supports HTML5 video</a>
@@ -217,19 +223,30 @@
     <!-- Video.js Scripts -->
     <script src="https://vjs.zencdn.net/8.10.0/video.min.js"></script>
     <script>
+        // Set standard Video.js behavior for poster to show only black
+        videojs.options.poster = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7'; // Forces black 1x1 base64 image
+
         var player = videojs('live-video-player');
+
+        // Initial load behavior: start with the first channel (m3u8) to avoid collision
+        window.onload = function() {
+            const initialBtn = document.querySelector('.channel-btn');
+            initialBtn.click(); // Trigger first button click to set up player correctly on load
+        };
 
         function switchStream(type, srcUrl, btnElement) {
             const container = document.getElementById('player-container');
 
             if (type === 'iframe') {
-                // Pause and cleanup video.js player if active
+                // Completely stop and dispose of Video.js player if active
                 if (player) {
-                    player.pause();
+                    player.dispose(); // Fully dispose of the old instance
+                    player = null; // Mark as null to re-initialize later
                 }
                 // Insert iframe into player container
                 container.innerHTML = `
                     <iframe 
+                        id="iframe-player"
                         src="${srcUrl}" 
                         width="100%" 
                         height="100%" 
@@ -241,15 +258,14 @@
                     </iframe>
                 `;
             } else if (type === 'm3u8') {
-                // Re-initialize video element if iframe was showing
-                if (!document.getElementById('live-video-player')) {
+                // If iframe is present, remove it and re-initialize video.js
+                if (document.getElementById('iframe-player')) {
                     container.innerHTML = `
                         <video
                             id="live-video-player"
                             class="video-js vjs-default-skin vjs-big-play-centered"
                             controls
-                            preload="auto"
-                            poster="https://i.ibb.co/VWKgt4Qn/Control-V-3.png">
+                            preload="auto">
                         </video>
                     `;
                     player = videojs('live-video-player');
