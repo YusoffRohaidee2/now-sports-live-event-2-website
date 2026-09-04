@@ -88,17 +88,17 @@
                 
                 <!-- Channel Switcher Buttons -->
                 <div class="mt-4 flex flex-wrap gap-2 justify-center">
-                    <button onclick="playChannel(channels.tsn5)" class="bg-red-600 hover:bg-red-700 text-white text-xs font-bold px-4 py-2 rounded-lg transition flex items-center gap-2">
-                        <i class="fas fa-tv"></i> TSN 5 FHD
+                    <button onclick="playChannel(channels.ssport_s1)" class="bg-red-600 hover:bg-red-700 text-white text-xs font-bold px-4 py-2 rounded-lg transition flex items-center gap-2">
+                        <i class="fas fa-tv"></i> S Sport (Server 1)
                     </button>
-                    <button onclick="playChannel(channels.premierSports)" class="bg-gray-800 hover:bg-gray-700 text-white text-xs font-bold px-4 py-2 rounded-lg transition flex items-center gap-2">
-                        <i class="fas fa-tv"></i> Premier Sports 1 ROI
+                    <button onclick="playChannel(channels.ssport_s2)" class="bg-gray-800 hover:bg-gray-700 text-white text-xs font-bold px-4 py-2 rounded-lg transition flex items-center gap-2">
+                        <i class="fas fa-tv"></i> S Sport (Server 2)
                     </button>
-                    <button onclick="playChannel(channels.beIN2_S1)" class="bg-gray-800 hover:bg-gray-700 text-white text-xs font-bold px-4 py-2 rounded-lg transition flex items-center gap-2">
-                        <i class="fas fa-tv"></i> beIN Sports 2 AU (Server 1)
+                    <button onclick="playChannel(channels.ssportplus_s1)" class="bg-gray-800 hover:bg-gray-700 text-white text-xs font-bold px-4 py-2 rounded-lg transition flex items-center gap-2">
+                        <i class="fas fa-tv"></i> S Sport Plus (Server 1)
                     </button>
-                    <button onclick="playChannel(channels.beIN2_S2)" class="bg-gray-800 hover:bg-gray-700 text-white text-xs font-bold px-4 py-2 rounded-lg transition flex items-center gap-2">
-                        <i class="fas fa-tv"></i> beIN Sports 2 AU (Server 2)
+                    <button onclick="playChannel(channels.ssportplus_s2)" class="bg-gray-800 hover:bg-gray-700 text-white text-xs font-bold px-4 py-2 rounded-lg transition flex items-center gap-2">
+                        <i class="fas fa-tv"></i> S Sport Plus (Server 2)
                     </button>
                 </div>
             </div>
@@ -127,61 +127,63 @@
         <p>&copy; 2026 Sports Hub Official | Now Sports Live Event 2</p>
     </footer>
 
-    <!-- Video.js & Dash.js Direct -->
+    <!-- Video.js & HLS.js CDN -->
     <script src="https://vjs.zencdn.net/8.10.0/video.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/dashjs@4.7.2/dist/dash.all.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/videojs-dash@5.1.1/dist/videojs-dash.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
 
     <script>
         const channels = {
-            tsn5: {
-                src: "https://otte.cache.aiv-cdn.net/bom-nitro/live/clients/dash/enc/cscevwljkq/out/v1/972185041b244140860b7d56398e9aaf/cenc.mpd",
-                keyId: "385ceb9714b75e0cef61254f80b31002",
-                key: "18dce92a2891fee68d21ede5173230f8"
+            ssport_s1: {
+                src: "https://andro.evrenesoglu99.click/checklist/androstreamlivess1.m3u8",
+                referrer: "https://mahsunsports.xyz/"
             },
-            premierSports: {
-                src: "https://otte.bia-cf.live.pv-cdn.net/pdx-nitro/live/clients/dash/enc/vwq77hfgzw/out/v1/b858e0b845c64cec953887bd4269e4ea/cenc.mpd",
-                keyId: "1444f4235529f183f0a5a486befe9cdb",
-                key: "e5e3fec67a1bb3472a2089c8a0a2557f"
+            ssport_s2: {
+                src: "https://dga1op10s1u3leo.33a6243d11525c.click/live/ssport/playlist.m3u8",
+                referrer: "https://www.sporcafe6.xyz/"
             },
-            beIN2_S1: {
-                src: "https://otte.cache.aiv-cdn.net/syd-nitro/live/dash/enc/8m8cd46i1t/out/v1/83985c68e4174e90a58a1f2c024be4c9/cenc.mpd",
-                keyId: "0b42be2664d7e811d04f3e504e0924c5",
-                key: "ae24090123b8c72ac5404dc152847cb8"
+            ssportplus_s1: {
+                src: "https://andro.evrenesoglu99.click/checklist/androstreamlivessplus1.m3u8",
+                referrer: "https://mahsunsports.xyz/"
             },
-            beIN2_S2: {
-                src: "https://otte.live.fly.ww.aiv-cdn.net/syd-nitro/live/clients/dash/enc/8m8cd46i1t/out/v1/83985c68e4174e90a58a1f2c024be4c9/cenc.mpd",
-                keyId: "0b42be2664d7e811d04f3e504e0924c5",
-                key: "ae24090123b8c72ac5404dc152847cb8"
+            ssportplus_s2: {
+                src: "https://dga1op10s1u3leo.33a6243d11525c.click/live/ssplus1/playlist.m3u8",
+                referrer: "https://www.sporcafe6.xyz/"
             }
         };
 
         const player = videojs('laliga-player');
+        let hlsInstance = null;
 
-        // Hook terus ke dalam Dash.js untuk konfigurasi DRM ClearKey yang sah
-        player.dash.webm = true;
-        
         function playChannel(channel) {
-            // Format tetapan DRM untuk Dash.js
-            const protData = {
-                "org.w3.clearkey": {
-                    "clearkeys": {
-                        [channel.keyId]: channel.key
+            const rawVideo = player.tech({ IWillNotUseThisInPlugins: true }).el_;
+
+            if (hlsInstance) {
+                hlsInstance.destroy();
+            }
+
+            if (Hls.isSupported()) {
+                hlsInstance = new Hls({
+                    xhrSetup: function(xhr, url) {
+                        xhr.setRequestHeader("Referer", channel.referrer);
                     }
-                }
-            };
+                });
 
-            player.src({
-                src: channel.src,
-                type: 'application/dash+xml',
-                protectionData: protData
-            });
-
-            player.play().catch(e => console.log("Autoplay blocked:", e));
+                hlsInstance.loadSource(channel.src);
+                hlsInstance.attachMedia(rawVideo);
+                hlsInstance.on(Hls.Events.MANIFEST_PARSED, function() {
+                    player.play().catch(e => console.log("Autoplay blocked:", e));
+                });
+            } else if (rawVideo.canPlayType('application/vnd.apple.mpegurl')) {
+                player.src({
+                    src: channel.src,
+                    type: 'application/x-mpegURL'
+                });
+                player.play();
+            }
         }
 
         player.ready(() => {
-            playChannel(channels.tsn5);
+            playChannel(channels.ssport_s1);
         });
     </script>
 </body>
