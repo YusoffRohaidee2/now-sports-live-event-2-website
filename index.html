@@ -10,6 +10,7 @@
     
     <!-- Video.js CSS -->
     <link href="https://vjs.zencdn.net/8.10.0/video-js.css" rel="stylesheet" />
+    
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800;900&display=swap');
         body {
@@ -25,24 +26,6 @@
         .glow-effect {
             box-shadow: 0 0 25px rgba(239, 68, 68, 0.2);
         }
-
-        /* Video.js Background Image Styling */
-        #ufc-player {
-            background-image: url('https://s3-ap-southeast-1.amazonaws.com/ams-astro/production/images/KYKGG.jpg') !important;
-            background-size: cover !important;
-            background-position: center !important;
-            background-repeat: no-repeat !important;
-        }
-
-        .video-js .vjs-tech {
-            background: transparent !important;
-        }
-
-        .video-js .vjs-poster {
-            background-size: cover !important;
-            background-position: center !important;
-        }
-
         .video-js .vjs-big-play-button {
             background-color: rgba(239, 68, 68, 0.9) !important;
             border-color: #ef4444 !important;
@@ -52,7 +35,6 @@
             line-height: 2.4em !important;
             margin-left: -1.2em !important;
             margin-top: -1.2em !important;
-            box-shadow: 0 0 20px rgba(239, 68, 68, 0.6);
         }
     </style>
 </head>
@@ -80,127 +62,54 @@
     <!-- Main Content Container -->
     <main class="max-w-7xl mx-auto px-4 py-8 w-full flex-grow flex flex-col items-center">
 
-        <!-- Video Player Section dengan Poster Background -->
+        <!-- Notice -->
+        <div class="w-full max-w-4xl mb-6">
+            <div class="bg-red-900/30 border border-red-500/50 rounded-xl p-4 text-center">
+                <i class="fas fa-exclamation-triangle text-red-500 text-2xl mb-2"></i>
+                <p class="text-sm text-gray-200">
+                    We apologize for the inconvenience. The Home of La Liga website is temporarily offline due to technical difficulties with the live stream. We are working to resolve this as soon as possible.
+                </p>
+            </div>
+        </div>
+
+        <!-- Video Player Section -->
         <div class="w-full max-w-4xl mb-6">
             <div class="glass-panel rounded-2xl p-4 border border-red-500/30 glow-effect">
                 <div class="relative aspect-video w-full rounded-xl overflow-hidden bg-black">
-                    <video 
-                        id="ufc-player" 
-                        class="video-js vjs-default-skin vjs-big-play-centered w-full h-full" 
-                        controls 
-                        preload="none" 
-                        crossorigin="anonymous"
-                        poster="https://s3-ap-southeast-1.amazonaws.com/ams-astro/production/images/KYKGG.jpg">
-                        <source src="https://183.bozztv.com/giatv/giatv-fake/astrosportsplus2/chunks.m3u8" type="application/x-mpegURL">
-                    </video>
+                    <video id="laliga-player" class="video-js vjs-default-skin vjs-big-play-centered w-full h-full" controls preload="auto"></video>
                 </div>
                 
                 <!-- Channel Switcher Buttons -->
                 <div class="mt-4 flex flex-wrap gap-2 justify-center">
-                    <button onclick="changeChannel('https://183.bozztv.com/giatv/giatv-fake/astrosportsplus2/chunks.m3u8')" class="bg-red-600 hover:bg-red-700 text-white text-xs font-bold px-4 py-2 rounded-lg transition flex items-center gap-2">
-                        <i class="fas fa-tv"></i> Astro Sports Plus 2
+                    <button onclick="playChannel(channels.tsn5)" class="bg-red-600 hover:bg-red-700 text-white text-xs font-bold px-4 py-2 rounded-lg transition flex items-center gap-2">
+                        <i class="fas fa-tv"></i> TSN 5 FHD
                     </button>
-                    <button onclick="changeChannel('https://aegis-cloudfront-1.tubi.video/bfad29e2-5bee-44f3-8256-127324e8b106/1080p-cc/index.m3u8')" class="bg-gray-800 hover:bg-gray-700 text-white text-xs font-bold px-4 py-2 rounded-lg transition flex items-center gap-2">
-                        <i class="fas fa-tv"></i> DAZN Ringside
+                    <button onclick="playChannel(channels.premierSports)" class="bg-gray-800 hover:bg-gray-700 text-white text-xs font-bold px-4 py-2 rounded-lg transition flex items-center gap-2">
+                        <i class="fas fa-tv"></i> Premier Sports 1 ROI
                     </button>
-                    <button onclick="changeChannel('https://linear-893.frequency.stream/dist/xumo/893/hls/master/playlist_1920x1080.m3u8')" class="bg-gray-800 hover:bg-gray-700 text-white text-xs font-bold px-4 py-2 rounded-lg transition flex items-center gap-2">
-                        <i class="fas fa-tv"></i> UFC Channel HD
+                    <button onclick="playChannel(channels.beIN2_S1)" class="bg-gray-800 hover:bg-gray-700 text-white text-xs font-bold px-4 py-2 rounded-lg transition flex items-center gap-2">
+                        <i class="fas fa-tv"></i> beIN Sports 2 AU (Server 1)
+                    </button>
+                    <button onclick="playChannel(channels.beIN2_S2)" class="bg-gray-800 hover:bg-gray-700 text-white text-xs font-bold px-4 py-2 rounded-lg transition flex items-center gap-2">
+                        <i class="fas fa-tv"></i> beIN Sports 2 AU (Server 2)
                     </button>
                 </div>
             </div>
         </div>
 
-<!-- Fight Card Schedule -->
-<div class="w-full max-w-4xl">
-    <h2 class="text-xl font-bold mb-4 text-gray-200 border-l-4 border-red-600 pl-3">Fight Card (Main Card - 6:00 PM)</h2>
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-        
-        <!-- Main Event -->
-        <div class="glass-panel p-4 rounded-xl border border-red-500/40 relative overflow-hidden">
-            <span class="absolute top-0 right-0 bg-red-600 text-white text-[10px] font-bold px-2 py-0.5 rounded-bl">MAIN EVENT</span>
-            <p class="text-xs text-gray-400 font-semibold mb-1">Bantamweight</p>
-            <div class="flex justify-between items-center text-sm font-extrabold">
-                <span class="text-white">Umar Nurmagomedov</span>
-                <span class="text-red-500 px-2">VS</span>
-                <span class="text-white">Song Yadong</span>
-            </div>
-            <div class="flex justify-between items-center text-xs text-gray-400 mt-2 border-t border-gray-800 pt-2">
-                <span>Record: 20 - 1 - 0</span>
-                <span>Record: 23 - 9 - 1, 1NC</span>
-            </div>
-        </div>
-
-        <!-- Co-Main Event -->
-        <div class="glass-panel p-4 rounded-xl border border-gray-800 relative overflow-hidden">
-            <span class="absolute top-0 right-0 bg-gray-700 text-white text-[10px] font-bold px-2 py-0.5 rounded-bl">CO-MAIN EVENT</span>
-            <p class="text-xs text-gray-400 font-semibold mb-1">Women's Strawweight</p>
-            <div class="flex justify-between items-center text-sm font-extrabold">
-                <span class="text-white">Yan Xiaonan</span>
-                <span class="text-red-500 px-2">VS</span>
-                <span class="text-white">Denise Gomes</span>
-            </div>
-            <div class="flex justify-between items-center text-xs text-gray-400 mt-2 border-t border-gray-800 pt-2">
-                <span>Record: 19 - 5 - 0, 1NC</span>
-                <span>Record: 12 - 3 - 0</span>
-            </div>
-        </div>
-
-        <!-- Match 3 -->
-        <div class="glass-panel p-4 rounded-xl border border-gray-800">
-            <p class="text-xs text-gray-400 font-semibold mb-1">Bantamweight</p>
-            <div class="flex justify-between items-center text-sm font-extrabold">
-                <span class="text-white">Qileng Aori</span>
-                <span class="text-red-500 px-2">VS</span>
-                <span class="text-white">Kai Asakura</span>
-            </div>
-            <div class="flex justify-between items-center text-xs text-gray-400 mt-2 border-t border-gray-800 pt-2">
-                <span>Record: 26 - 13 - 0, 1NC</span>
-                <span>Record: 22 - 6 - 0</span>
-            </div>
-        </div>
-
-        <!-- Match 4 -->
-        <div class="glass-panel p-4 rounded-xl border border-gray-800">
-            <p class="text-xs text-gray-400 font-semibold mb-1">Flyweight</p>
-            <div class="flex justify-between items-center text-sm font-extrabold">
-                <span class="text-white">Alex Perez</span>
-                <span class="text-red-500 px-2">VS</span>
-                <span class="text-white">Su Mudaerji</span>
-            </div>
-            <div class="flex justify-between items-center text-xs text-gray-400 mt-2 border-t border-gray-800 pt-2">
-                <span>Record: 26 - 10 - 0, 1NC</span>
-                <span>Record: 19 - 7 - 0, 1NC</span>
-            </div>
-        </div>
-
-        <!-- Match 5 -->
-        <div class="glass-panel p-4 rounded-xl border border-gray-800">
-            <p class="text-xs text-gray-400 font-semibold mb-1">Light Heavyweight</p>
-            <div class="flex justify-between items-center text-sm font-extrabold">
-                <span class="text-white">Liu Ce</span>
-                <span class="text-red-500 px-2">VS</span>
-                <span class="text-white">Levi Rodrigues Jr.</span>
-            </div>
-            <div class="flex justify-between items-center text-xs text-gray-400 mt-2 border-t border-gray-800 pt-2">
-                <span>Record: 3 - 1 - 0</span>
-                <span>Record: 5 - 1 - 0, 1NC</span>
-            </div>
-        </div>
-
-        <!-- Match 6 -->
-        <div class="glass-panel p-4 rounded-xl border border-gray-800">
-            <p class="text-xs text-gray-400 font-semibold mb-1">Flyweight</p>
-            <div class="flex justify-between items-center text-sm font-extrabold">
-                <span class="text-white">Bilal Hasan</span>
-                <span class="text-red-500 px-2">VS</span>
-                <span class="text-white">Nilson Rojas</span>
-            </div>
-            <div class="flex justify-between items-center text-xs text-gray-400 mt-2 border-t border-gray-800 pt-2">
-                <span>Record: 9 - 0 - 0, 1NC</span>
-                <span>Record: 9 - 0 - 0</span>
+        <!-- La Liga Event Card -->
+        <div class="w-full max-w-4xl">
+            <h2 class="text-xl font-bold mb-4 text-gray-200 border-l-4 border-red-600 pl-3">La Liga Matchday</h2>
+            <div class="grid grid-cols-1 gap-4">
+                <div class="glass-panel p-6 rounded-xl border border-red-500/40 relative overflow-hidden">
+                    <span class="absolute top-0 right-0 bg-red-600 text-white text-[10px] font-bold px-3 py-1 rounded-bl">FEATURED MATCH</span>
+                    <p class="text-xs text-gray-400 font-semibold mb-2">La Liga EA Sports</p>
+                    <div class="flex justify-between items-center text-lg md:text-xl font-extrabold my-2">
+                        <span class="text-white">Real Betis</span>
+                        <span class="text-red-500 px-4">VS</span>
+                        <span class="text-white">Real Madrid</span>
                     </div>
                 </div>
-
             </div>
         </div>
 
@@ -208,21 +117,77 @@
 
     <!-- Footer -->
     <footer class="glass-panel border-t border-gray-800 py-6 text-center text-xs text-gray-500 mt-8">
-        <p>&copy; 2026 Sports Hub Official | UFC Live Stream</p>
+        <p>&copy; 2026 Sports Hub Official | Now Sports Live Event 2</p>
     </footer>
 
-    <!-- Video.js Script -->
-    <script src="https://vjs.zencdn.net/8.10.0/video.js"></script>
-    <script>
-        var player = videojs('ufc-player');
+    <!-- Video.js & EME DRM Plugins -->
+    <script src="https://vjs.zencdn.net/8.10.0/video.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/videojs-contrib-eme@5.4.0/dist/videojs-contrib-eme.min.js"></script>
 
-        function changeChannel(src) {
+    <script>
+        const channels = {
+            tsn5: {
+                src: "https://otte.cache.aiv-cdn.net/bom-nitro/live/clients/dash/enc/cscevwljkq/out/v1/972185041b244140860b7d56398e9aaf/cenc.mpd",
+                keyId: "385ceb9714b75e0cef61254f80b31002",
+                key: "18dce92a2891fee68d21ede5173230f8"
+            },
+            premierSports: {
+                src: "https://otte.bia-cf.live.pv-cdn.net/pdx-nitro/live/clients/dash/enc/vwq77hfgzw/out/v1/b858e0b845c64cec953887bd4269e4ea/cenc.mpd",
+                keyId: "1444f4235529f183f0a5a486befe9cdb",
+                key: "e5e3fec67a1bb3472a2089c8a0a2557f"
+            },
+            beIN2_S1: {
+                src: "https://otte.cache.aiv-cdn.net/syd-nitro/live/dash/enc/8m8cd46i1t/out/v1/83985c68e4174e90a58a1f2c024be4c9/cenc.mpd",
+                keyId: "0b42be2664d7e811d04f3e504e0924c5",
+                key: "ae24090123b8c72ac5404dc152847cb8"
+            },
+            beIN2_S2: {
+                src: "https://otte.live.fly.ww.aiv-cdn.net/syd-nitro/live/clients/dash/enc/8m8cd46i1t/out/v1/83985c68e4174e90a58a1f2c024be4c9/cenc.mpd",
+                keyId: "0b42be2664d7e811d04f3e504e0924c5",
+                key: "ae24090123b8c72ac5404dc152847cb8"
+            }
+        };
+
+        // Inisialisasi Video.js + EME
+        const player = videojs('laliga-player');
+        player.eme();
+
+        // Hex to Base64URL converter
+        function hexToBase64Url(hexStr) {
+            let base64 = btoa(hexStr.match(/\w{2}/g).map(a => String.fromCharCode(parseInt(a, 16))).join(''));
+            return base64.replace(/\+/g, '-').replace(/\//g, '_').replace(/=/g, '');
+        }
+
+        function playChannel(channel) {
+            const keyIdB64 = hexToBase64Url(channel.keyId);
+            const keyB64 = hexToBase64Url(channel.key);
+
             player.src({
-                type: 'application/x-mpegURL',
-                src: src
+                src: channel.src,
+                type: 'application/dash+xml',
+                keySystems: {
+                    'org.w3.clearkey': {
+                        getLicense: function (emeOptions, keyMessage, callback) {
+                            const license = new TextEncoder().encode(JSON.stringify({
+                                keys: [{
+                                    kty: 'oct',
+                                    kid: keyIdB64,
+                                    k: keyB64
+                                }]
+                            }));
+                            callback(null, license);
+                        }
+                    }
+                }
             });
+
             player.play();
         }
+
+        // Mainkan TSN 5 secara automatik apabila halaman dibuka
+        player.ready(() => {
+            playChannel(channels.tsn5);
+        });
     </script>
 </body>
 </html>
