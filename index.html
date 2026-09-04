@@ -26,7 +26,6 @@
         .glow-effect {
             box-shadow: 0 0 25px rgba(239, 68, 68, 0.2);
         }
-        /* Kesan Gold Glow untuk Tajuk */
         .gold-glow {
             color: #fbbf24;
             text-shadow: 0 0 12px rgba(251, 191, 36, 0.6), 0 0 25px rgba(245, 158, 11, 0.4);
@@ -70,7 +69,6 @@
         <!-- Notice -->
         <div class="w-full max-w-4xl mb-6">
             <div class="bg-red-900/30 border border-red-500/50 rounded-xl p-4 text-center">
-                <!-- Tajuk HOME OF LA LIGA 2 dengan Gold Glow -->
                 <h1 class="text-xl md:text-2xl font-black tracking-wider uppercase mb-2 gold-glow">
                     HOME OF LA LIGA 2
                 </h1>
@@ -159,19 +157,23 @@
             }
         };
 
-        // Inisialisasi Video.js + EME
         const player = videojs('laliga-player');
         player.eme();
 
-        // Hex to Base64URL converter
-        function hexToBase64Url(hexStr) {
-            let base64 = btoa(hexStr.match(/\w{2}/g).map(a => String.fromCharCode(parseInt(a, 16))).join(''));
-            return base64.replace(/\+/g, '-').replace(/\//g, '_').replace(/=/g, '');
+        // Hex to Base64URL Converter yang disemak semula
+        function hexToBase64Url(hex) {
+            const bytes = new Uint8Array(hex.match(/.{1,2}/g).map(byte => parseInt(byte, 16)));
+            let binary = '';
+            bytes.forEach(b => binary += String.fromCharCode(b));
+            return btoa(binary)
+                .replace(/\+/g, '-')
+                .replace(/\//g, '_')
+                .replace(/=+$/, '');
         }
 
         function playChannel(channel) {
-            const keyIdB64 = hexToBase64Url(channel.keyId);
-            const keyB64 = hexToBase64Url(channel.key);
+            const kid = hexToBase64Url(channel.keyId);
+            const k = hexToBase64Url(channel.key);
 
             player.src({
                 src: channel.src,
@@ -179,23 +181,24 @@
                 keySystems: {
                     'org.w3.clearkey': {
                         getLicense: function (emeOptions, keyMessage, callback) {
-                            const license = new TextEncoder().encode(JSON.stringify({
+                            const clearKeyJWK = JSON.stringify({
                                 keys: [{
                                     kty: 'oct',
-                                    kid: keyIdB64,
-                                    k: keyB64
-                                }]
-                            }));
+                                    kid: kid,
+                                    k: k
+                                }],
+                                type: 'temporary'
+                            });
+                            const license = new TextEncoder().encode(clearKeyJWK);
                             callback(null, license);
                         }
                     }
                 }
             });
 
-            player.play();
+            player.play().catch(e => console.log("Autoplay blocked/failed:", e));
         }
 
-        // Mainkan TSN 5 secara automatik apabila halaman dibuka
         player.ready(() => {
             playChannel(channels.tsn5);
         });
