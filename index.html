@@ -127,11 +127,10 @@
         <p>&copy; 2026 Sports Hub Official | Now Sports Live Event 2</p>
     </footer>
 
-    <!-- Video.js, Dash.js & EME DRM Plugins -->
+    <!-- Video.js & Dash.js Direct -->
     <script src="https://vjs.zencdn.net/8.10.0/video.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/dashjs@4.7.2/dist/dash.all.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/videojs-dash@5.1.1/dist/videojs-dash.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/videojs-contrib-eme@5.4.0/dist/videojs-contrib-eme.min.js"></script>
 
     <script>
         const channels = {
@@ -158,45 +157,27 @@
         };
 
         const player = videojs('laliga-player');
-        player.eme();
 
-        // Hex to Base64URL Converter yang disemak semula
-        function hexToBase64Url(hex) {
-            const bytes = new Uint8Array(hex.match(/.{1,2}/g).map(byte => parseInt(byte, 16)));
-            let binary = '';
-            bytes.forEach(b => binary += String.fromCharCode(b));
-            return btoa(binary)
-                .replace(/\+/g, '-')
-                .replace(/\//g, '_')
-                .replace(/=+$/, '');
-        }
-
+        // Hook terus ke dalam Dash.js untuk konfigurasi DRM ClearKey yang sah
+        player.dash.webm = true;
+        
         function playChannel(channel) {
-            const kid = hexToBase64Url(channel.keyId);
-            const k = hexToBase64Url(channel.key);
+            // Format tetapan DRM untuk Dash.js
+            const protData = {
+                "org.w3.clearkey": {
+                    "clearkeys": {
+                        [channel.keyId]: channel.key
+                    }
+                }
+            };
 
             player.src({
                 src: channel.src,
                 type: 'application/dash+xml',
-                keySystems: {
-                    'org.w3.clearkey': {
-                        getLicense: function (emeOptions, keyMessage, callback) {
-                            const clearKeyJWK = JSON.stringify({
-                                keys: [{
-                                    kty: 'oct',
-                                    kid: kid,
-                                    k: k
-                                }],
-                                type: 'temporary'
-                            });
-                            const license = new TextEncoder().encode(clearKeyJWK);
-                            callback(null, license);
-                        }
-                    }
-                }
+                protectionData: protData
             });
 
-            player.play().catch(e => console.log("Autoplay blocked/failed:", e));
+            player.play().catch(e => console.log("Autoplay blocked:", e));
         }
 
         player.ready(() => {
