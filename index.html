@@ -26,6 +26,11 @@
         .glow-effect {
             box-shadow: 0 0 25px rgba(239, 68, 68, 0.2);
         }
+        /* Kesan Gold Glow untuk Tajuk */
+        .gold-glow {
+            color: #fbbf24;
+            text-shadow: 0 0 12px rgba(251, 191, 36, 0.6), 0 0 25px rgba(245, 158, 11, 0.4);
+        }
         .video-js .vjs-big-play-button {
             background-color: rgba(239, 68, 68, 0.9) !important;
             border-color: #ef4444 !important;
@@ -65,6 +70,10 @@
         <!-- Notice -->
         <div class="w-full max-w-4xl mb-6">
             <div class="bg-red-900/30 border border-red-500/50 rounded-xl p-4 text-center">
+                <!-- Tajuk HOME OF LA LIGA 2 dengan Gold Glow -->
+                <h1 class="text-xl md:text-2xl font-black tracking-wider uppercase mb-2 gold-glow">
+                    HOME OF LA LIGA 2
+                </h1>
                 <i class="fas fa-exclamation-triangle text-red-500 text-2xl mb-2"></i>
                 <p class="text-sm text-gray-200">
                     We apologize for the inconvenience. The Home of La Liga website is temporarily offline due to technical difficulties with the live stream. We are working to resolve this as soon as possible.
@@ -120,8 +129,10 @@
         <p>&copy; 2026 Sports Hub Official | Now Sports Live Event 2</p>
     </footer>
 
-    <!-- Video.js & EME DRM Plugins -->
+    <!-- Video.js, Dash.js & EME DRM Plugins -->
     <script src="https://vjs.zencdn.net/8.10.0/video.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/dashjs@4.7.2/dist/dash.all.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/videojs-dash@5.1.1/dist/videojs-dash.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/videojs-contrib-eme@5.4.0/dist/videojs-contrib-eme.min.js"></script>
 
     <script>
